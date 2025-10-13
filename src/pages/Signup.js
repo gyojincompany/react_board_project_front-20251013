@@ -11,6 +11,7 @@ function Signup() {
     const navigate = useNavigate();
 
     const handleSignup = async(e) => {
+        e.preventDefault(); //submit 이벤트 후 초기화 현상 방지
         try {
             await api.post("/api/auth/signup",{username, password});
             alert("회원가입 성공!");
