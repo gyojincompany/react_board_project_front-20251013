@@ -31,8 +31,7 @@ function Signup() {
                 <input type="password" placeholder="비밀번호" value={password} 
                 onChange={(e) => setPassword(e.target.value)} />
                 <button type="submit">회원가입</button>
-            </form>
-            
+            </form>            
         </div>
     );
 }
