@@ -14,6 +14,7 @@ function BoardDetail({ user }) {
     const [error, setError] = useState(null);
     const {id} = useParams(); // board/:id id 파라미터 받아오기
 
+    //클릭한 글의 id로 글 1개 가져오기
     const loadPost = async () => { //특정 글 id로 글 1개 요청하기
         try{
             setLoading(true);
@@ -33,6 +34,25 @@ function BoardDetail({ user }) {
         loadPost();
     },[id]);
     
+    //글삭제
+    const handleDelete = async () => {
+        if(!window.confirm("정말 삭제하시겠습니까?")) { //확인->true, 취소->false
+            return;
+        }
+        try {
+            await api.delete(`/api/board/${id}`);
+            alert("게시글 삭제 성공!");
+            navigate("/board");
+        } catch (err) {
+            console.error(err);
+            if(err.response.status === 403){
+                alert("삭제 권한이 없습니다.");
+            } else {
+                alert("삭제 실패!");
+            }
+        }
+    }
+
     if(loading) return <p>게시글 로딩 중....</p>;
     if(error) return <p style={{color:"red"}}>{error}</p>
     if(!post) return <p sytle={{color:"blue"}}>해당 게시글이 존재하지 않습니다.</p>
@@ -53,8 +73,8 @@ function BoardDetail({ user }) {
 
                 {isAuthor && (
                 <>    
-                    <button>수정</button>                
-                    <button>삭제</button>
+                    <button className="edit-button">수정</button>                
+                    <button className="delete-button" onClick={handleDelete}>삭제</button>
                 </>
                 )}
 
