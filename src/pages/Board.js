@@ -41,7 +41,8 @@ function Board({ user }) {
                 <tbody>
                     { posts.length > 0 ? (
                         posts
-                        .reverse //최신글이 위로 오게
+                        .slice() //얕은 복사
+                        .reverse()
                         .map((p, index) => (
                         <tr key={p.id}>
                             <td>{posts.length - index}</td>
