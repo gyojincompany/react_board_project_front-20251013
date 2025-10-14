@@ -12,15 +12,23 @@ function BoardDetail({ user }) {
     const [post, setPost] = useState(null); //해당 글 id로 요청한 글 객체
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editing, setEditing] = useState(false); //수정 화면 출력 여부
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+
     const {id} = useParams(); // board/:id id 파라미터 받아오기
 
     //클릭한 글의 id로 글 1개 가져오기
     const loadPost = async () => { //특정 글 id로 글 1개 요청하기
         try{
             setLoading(true);
-            const res = await api.get(`/api/board/${id}`);
+            const res = await api.get(`/api/board/${id}`);            
             setPost(res.data); //특정 글 id 객체를 state에 등록
-            console.log(res.data.title);
+            setTitle(res.data.title); 
+            //원본 글의 제목을 수정화면에 표시하는 변수인 title 변수에 저장
+            setContent(res.data.content);
+            //원본 글의 내용을 수정화면에 표시하는 변수인 content 변수에 저장
+            
         } catch(err) {
             console.error(err);
             setError("해당 게시글은 존재하지 않습니다.");
@@ -53,6 +61,26 @@ function BoardDetail({ user }) {
         }
     }
 
+    const handleUpdate = async () => {
+        if(!window.confirm("정말 수정하시겠습니까?")) { //확인->true, 취소->false
+            return;
+        }
+        try {
+            const res = await api.put(`/api/board/${id}`,{ title, content });
+            alert("게시글이 수정되었습니다.");
+            setPost(res.data); //새로 수정된 글로 post 변수 값 변경
+            setEditing(false); //상세보기 화면으로 전환
+
+        } catch(err) {
+            console.error(err);
+            if(err.response.status === 403){
+                alert("수정 권한이 없습니다.");
+            } else {
+                alert("수정 실패!");
+            }
+        }
+    };
+
     if(loading) return <p>게시글 로딩 중....</p>;
     if(error) return <p style={{color:"red"}}>{error}</p>
     if(!post) return <p sytle={{color:"blue"}}>해당 게시글이 존재하지 않습니다.</p>
@@ -62,23 +90,37 @@ function BoardDetail({ user }) {
 
     return (
         <div className="detail-container">
-            <h2>{post.title}</h2>
-            <p className="author">작성자 : {post.author.username}</p>
-            <div className="content">{post.content}</div>
+            {editing ? (
+                <div className="edit-form">
+                    <h2>글 수정하기</h2>
+                    <input type="text" value={title}
+                    onChange={(e) => setTitle(e.target.value)} />
+                    <textarea value={content}
+                    onChange={(e) => setContent(e.target.value)} />
+                    <div className="button-group">
+                        <button className="edit-button" onClick={handleUpdate}>저장</button>
+                        <button className="delete-button" onClick={() => setEditing(false)}>취소</button>
+                    </div>    
+                </div>
+            ):(
+                <>
+                <h2>{post.title}</h2>
+                <p className="author">작성자 : {post.author.username}</p>
+                <div className="content">{post.content}</div>
 
-            <div className="button-group">
-                <button onClick={()=>navigate("/board")}>글목록</button>
-                
-                {/* 로그인한 유저 본인이 쓴글만 삭제 수정 가능 */}
-
-                {isAuthor && (
-                <>    
-                    <button className="edit-button">수정</button>                
-                    <button className="delete-button" onClick={handleDelete}>삭제</button>
+                <div className="button-group">
+                    <button className="list-button" onClick={()=>navigate("/board")}>글목록</button>
+                    
+                    {/* 로그인한 유저 본인이 쓴글만 삭제 수정 가능 */}
+                    {isAuthor && (
+                    <>    
+                        <button className="edit-button" onClick={() => setEditing(true)}>수정</button>
+                        <button className="delete-button" onClick={handleDelete}>삭제</button>
+                    </>
+                    )}
+                </div>
                 </>
-                )}
-
-            </div>
+            )}
         </div>
     );
 }

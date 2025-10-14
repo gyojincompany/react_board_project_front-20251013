@@ -34,3 +34,15 @@
     line-height: 1.5;
 }
 
+.list-button:hover {
+    background-color: rgb(3, 64, 134);
+}
+
+.delete-button:hover {
+    background-color: rgb(228, 50, 6);
+}
+
+.edit-button:hover {
+    background-color: rgb(4, 212, 14);
+}
+
