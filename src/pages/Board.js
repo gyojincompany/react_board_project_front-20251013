@@ -52,6 +52,8 @@ function Board({ user }) {
         const startPage = Math.floor(currentPage / 10) * 10;
         //0 1 2 3 4 -> 5 6 7 8 9 --> Math.floor(currentPage / 5) * 5;
         const endPage = (startPage + 10) > totalPages ? totalPages : (startPage+10);
+        //마지막 페이지 번호가 계산된 endPage 값보다 작을 경우 마지막 페이지를 
+        //endPage 값으로 변경하여 마지막 페이지 까지만 페이지 그룹이 출력되도록 수정
         const pages = [];
         for (let i = startPage; i < endPage; i++) {
             pages.push(i);
@@ -105,14 +107,20 @@ function Board({ user }) {
             </table>
             {/* 페이지 번호와 이동 화살표 출력 */}
             <div className="pagination">
-                <button>◀</button>
+                <button onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 0}>
+                ◀
+                </button>
                 {getPageNumbers().map((num)=>(
                     <button key={num} onClick={() => setCurrentPage(num)}>
                         {num + 1}
                     </button>
                   )
                 )}
-                <button>▶</button>
+                <button onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={currentPage === (totalPages-1) || totalPages === 0}>
+                    ▶
+                </button>
             </div>
             
             <div className="write-button-container">
