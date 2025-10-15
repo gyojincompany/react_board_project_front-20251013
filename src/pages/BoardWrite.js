@@ -24,7 +24,7 @@ function BoardWrite({ user }) {
             alert("글 작성 완료!");
             navigate("/board"); //글 작성 후 게시판 리스트로 이동
         } catch(err) {
-            if (err.response && err.response.status == 400) {
+            if (err.response && err.response.status === 400) {
                 setErrors(err.response.data);
             } else {
                 console.error(err);
