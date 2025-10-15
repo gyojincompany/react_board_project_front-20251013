@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function Board({ user }) {
 
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([]); //게시판 리스트에 출력할 글들 배열
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0); //현재 페이지 번호
@@ -61,7 +61,7 @@ function Board({ user }) {
         return pages;
     };
 
-    //날짜 format 함수
+    //날짜 format 함수->날짜만 출력
     const formatDate = (dateString) => {
         
         return dateString.substring(0,10);

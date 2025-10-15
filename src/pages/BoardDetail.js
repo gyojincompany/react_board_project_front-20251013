@@ -82,9 +82,28 @@ function BoardDetail({ user }) {
     };
 
     //댓글 관련 이벤트 처리 시작!
-    const [newComment, setNewComment] = useState("");
+    const [newComment, setNewComment] = useState(""); //새로운 댓글 저장 변수
+    const [comments, setComments] = useState([]); //백엔드에서 가져온 기존 댓글 배열
+    const [editCommentContent, setEditCommentContent] = useState("");
+    const [editCommentId, setEditCommentId] = useState(null);
 
+    //날짜 format 함수 -> 날짜와 시간 출력
+    const formatDate = (dateString) => {        
+        return dateString.substring(0,10);
+    }
+
+    //댓글 제출 함수
     const handleCommentSubmit = () => {
+
+    }
+
+    //댓글 삭제 이벤트 함수
+    const handleCommentDelete = (commentId) => {
+
+    }
+
+    //댓글 수정 이벤트 함수
+    const handleCommentUpdate = () => {
 
     }
 
@@ -142,7 +161,37 @@ function BoardDetail({ user }) {
                     </form>
                     {/* 댓글 입력 폼 끝! */}
 
-                    
+                    {/* 기존 댓글 리스트 시작! */}
+                    <ul className="comment-list">
+                        {comments.map((c)=>(
+                            <li key={c.id} className="comment-item">
+                                <div className="comment-header">
+                                    <span className="comment-author">
+                                        {c.author.username}
+                                    </span>
+                                    <span className="comment-date">
+                                        {formatDate(c.createDate)}
+                                    </span>
+                                </div>
+                                
+                                <div className="comment-content">
+                                    {c.content}
+                                </div>
+                                <div className="button-group">
+                                <button className="list-button" onClick={()=>navigate("/board")}>글목록</button>
+                                
+                                {/* 로그인한 유저 본인이 쓴글만 삭제 수정 가능 */}
+                                {user === c.author.username && (
+                                    <>    
+                                        <button className="edit-button" onClick={() => handleCommentUpdate(c)}>수정</button>
+                                        <button className="delete-button" onClick={handleCommentDelete(c.id)}>삭제</button>
+                                    </>
+                                )}
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    {/* 기존 댓글 리스트 끝! */}
                 </div>    
                 {/* 댓글 영역 끝! */}    
                 </>
