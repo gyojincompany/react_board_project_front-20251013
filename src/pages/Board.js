@@ -49,12 +49,13 @@ function Board({ user }) {
     //ex) 총 페이지 수 : 157 -> 총 16 페이지 필요 -> [0 1 2 3 4 5 6 7 8 9]
     // ▶ -> [10 11 12 13 14 15]
     const getPageNumbers = () => {
-        const start = 0; 
-        const end = 0;
+        const startPage = Math.floor(currentPage / 10) * 10;
+        //0 1 2 3 4 -> 5 6 7 8 9 --> Math.floor(currentPage / 5) * 5;
+        const endPage = (startPage + 10) > totalPages ? totalPages : (startPage+10);
         const pages = [];
-        for (let i = start; i < end; i++) {
-            pages.push[i];
-        }
+        for (let i = startPage; i < endPage; i++) {
+            pages.push(i);
+        };
         return pages;
     };
 
@@ -106,7 +107,9 @@ function Board({ user }) {
             <div className="pagination">
                 <button>◀</button>
                 {getPageNumbers().map((num)=>(
-                    <button onClick={() => setCurrentPage(num)}>{num + 1}</button>
+                    <button key={num} onClick={() => setCurrentPage(num)}>
+                        {num + 1}
+                    </button>
                   )
                 )}
                 <button>▶</button>
