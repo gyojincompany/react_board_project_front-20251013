@@ -81,6 +81,16 @@ function BoardDetail({ user }) {
         }
     };
 
+    //댓글 관련 이벤트 처리 시작!
+    const [newComment, setNewComment] = useState("");
+
+    const handleCommentSubmit = () => {
+
+    }
+
+    //댓글 관련 이벤트 처리 끝!
+
+
     if(loading) return <p>게시글 로딩 중....</p>;
     if(error) return <p style={{color:"red"}}>{error}</p>
     if(!post) return <p sytle={{color:"blue"}}>해당 게시글이 존재하지 않습니다.</p>
@@ -119,6 +129,22 @@ function BoardDetail({ user }) {
                     </>
                     )}
                 </div>
+
+                {/* 댓글 영역 시작! */}  
+                <div className="comment-section">  
+                    {/* 댓글 입력 폼 시작! */}                  
+                    <h3>댓글 쓰기</h3>
+                    <form onSubmit={handleCommentSubmit} className="comment-form">
+                        <textarea placeholder="댓글을 입력하세요."
+                            value={newComment} onChange={(e) => setNewComment(e.target.value)}
+                        ></textarea>
+                        <button type="submit" className="comment-button">등록</button>
+                    </form>
+                    {/* 댓글 입력 폼 끝! */}
+
+                    
+                </div>    
+                {/* 댓글 영역 끝! */}    
                 </>
             )}
         </div>
