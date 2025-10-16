@@ -28,7 +28,7 @@ function App() {
 
   const handleLogout = async () => {
     await api.post("/api/auth/logout");
-    setUser(null);
+    setUser(null); //로그아웃 후에 user값을 다시 null으로 저장
   }
 
   return (

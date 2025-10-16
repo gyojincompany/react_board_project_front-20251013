@@ -98,6 +98,9 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
     const handleCommentSubmit = async (e) => { //백엔드에 댓글 저장 요청
         e.preventDefault();   
         setCommentErrors({});
+        if (!user) {
+            alert("로그인 한 후 댓글을 작성해 주세요.");
+        }
         if (!newComment.trim()) {
             alert("댓글 내용을 입력해주세요.");
             return;
@@ -173,7 +176,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
     if(!post) return <p sytle={{color:"blue"}}>해당 게시글이 존재하지 않습니다.</p>
 
     //로그인 상태이면서 로그인한 유저와 글을 쓴 유저가 같은때->참
-    const isAuthor = user && user === post.author.username;
+    const isAuthor = user && user === post?.author?.username;
 
     return (
         <div className="detail-container">
@@ -185,7 +188,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                     <textarea value={content}
                     onChange={(e) => setContent(e.target.value)} />
                     <div className="button-group">
-                        <button className="edit-button" onClick={handleUpdate}>저장</button>
+                        <button className="edit-button" onClick={() => handleUpdate}>저장</button>
                         <button className="delete-button" onClick={() => setEditing(false)}>취소</button>
                     </div>    
                 </div>
@@ -227,7 +230,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                             <li key={c.id} className="comment-item">
                                 <div className="comment-header">
                                     <span className="comment-author">
-                                        {c.author.username}
+                                        {c.author?.username}
                                     </span>
                                     <span className="comment-date">
                                         {formatDate(c.createDate)}
@@ -262,7 +265,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                                     
                                     <div className="button-group">
                                         {/* 로그인한 유저 본인이 쓴 댓글만 삭제 수정 가능 */}
-                                        {user === c.author.username && (
+                                        {user === c.author?.username && (
                                         <>    
                                             <button className="edit-button" 
                                                 onClick={() => handleCommentEdit(c)}>
