@@ -40,7 +40,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     useEffect(() => {
         loadPost(); //게시글 다시 불러오기
-        //loadComments(); //게시글에 달린 댓글 리스트 다시 불러오기
+        loadComments(); //게시글에 달린 댓글 리스트 다시 불러오기
     },[id]);
     
     //글삭제
@@ -96,7 +96,8 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     //댓글 쓰기 함수->원 게시글의 id를 파라미터로 제출
     const handleCommentSubmit = async (e) => { //백엔드에 댓글 저장 요청
-        e.preventDefault();       
+        e.preventDefault();   
+        setCommentErrors({});
         if (!newComment.trim()) {
             alert("댓글 내용을 입력해주세요.");
             return;
@@ -105,7 +106,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
             await api.post(`/api/comments/${id}`, { content : newComment });
             setNewComment("");
             //댓글 리스트 불러오기 호출
-            //loadComments(); //새 댓글 기존 댓글 리스트에 반영
+            loadComments(); //새 댓글 기존 댓글 리스트에 반영
         } catch (err) {            
             if (err.response && err.response.status === 400) {
                 setCommentErrors(err.response.data);
@@ -130,17 +131,27 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     //댓글 삭제 이벤트 함수
     const handleCommentDelete = (commentId) => {
-
+        
     }
 
     //댓글 수정 이벤트 함수->백엔드 수정 요청
-    const handleCommentUpdate = (commentId) => {
-
+    const handleCommentUpdate = async (commentId) => {
+        try {
+            await api.put(`/api/comments/${commentId}`, 
+                { content : editingCommentContent });
+            setEditingCommentId(null);
+            setEditingCommentContent("");
+            loadComments();
+        } catch (err) {
+            alert("댓글 수정 실패!");
+        }
     }
 
     //댓글 수정 여부 확인
     const handleCommentEdit = (comment) => {
         setEditingCommentId(comment.id);
+        setEditingCommentContent(comment.content); 
+        //EditingCommentContent->수정할 내용으로 저장
     }
 
     //댓글 관련 이벤트 처리 끝!
@@ -200,6 +211,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
                     {/* 기존 댓글 리스트 시작! */}
                     <ul className="comment-list">
+                        {comments.length === 0 && <p style={{color:"blue"}}>아직 등록된 댓글이 없습니다.</p>}
                         {comments.map((c)=>(
                             <li key={c.id} className="comment-item">
                                 <div className="comment-header">
@@ -218,7 +230,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                                     onChange={(e) => setEditingCommentContent(e.target.value)}
                                     />
                                     <button className="comment-save"
-                                        onClick={handleCommentUpdate(c.id)}
+                                        onClick={() => handleCommentUpdate(c.id)}
                                     >
                                         저장
                                     </button>
@@ -242,11 +254,11 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                                         {user === c.author.username && (
                                         <>    
                                             <button className="edit-button" 
-                                                onClick={handleCommentEdit(c)}>
+                                                onClick={() => handleCommentEdit(c)}>
                                                 수정
                                             </button>
                                             <button className="delete-button"
-                                                onClick={handleCommentDelete(c.id)}>
+                                                onClick={() => handleCommentDelete(c.id)}>
                                                 삭제
                                             </button>
                                         </>
