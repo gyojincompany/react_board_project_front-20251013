@@ -40,7 +40,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     useEffect(() => {
         loadPost(); //게시글 다시 불러오기
-        loadComments(); //게시글에 달린 댓글 리스트 다시 불러오기
+        //loadComments(); //게시글에 달린 댓글 리스트 다시 불러오기
     },[id]);
     
     //글삭제
@@ -87,6 +87,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
     const [comments, setComments] = useState([]); //백엔드에서 가져온 기존 댓글 배열
     const [editingCommentContent, setEditingCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState(null);
+    const [commentErrors, setCommentErrors] = useState({});
 
     //날짜 format 함수 -> 날짜와 시간 출력
     const formatDate = (dateString) => {        
@@ -95,7 +96,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     //댓글 쓰기 함수->원 게시글의 id를 파라미터로 제출
     const handleCommentSubmit = async (e) => { //백엔드에 댓글 저장 요청
-        e.preventDefault();
+        e.preventDefault();       
         if (!newComment.trim()) {
             alert("댓글 내용을 입력해주세요.");
             return;
@@ -104,11 +105,15 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
             await api.post(`/api/comments/${id}`, { content : newComment });
             setNewComment("");
             //댓글 리스트 불러오기 호출
-            loadComments(); //새 댓글 기존 댓글 리스트에 반영
-        } catch (err) {
-            console.error(err);
-            alert("댓글 등록 실패!");
-        }
+            //loadComments(); //새 댓글 기존 댓글 리스트에 반영
+        } catch (err) {            
+            if (err.response && err.response.status === 400) {
+                setCommentErrors(err.response.data);
+            } else {
+                console.error(err);
+                alert("댓글 등록 실패!");
+            }
+        }        
     };
 
     //댓글 리스트 불러오기 함수
@@ -188,6 +193,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                         <textarea placeholder="댓글을 입력하세요."
                             value={newComment} onChange={(e) => setNewComment(e.target.value)}
                         />
+                        {commentErrors.content && <p style={{color:"red"}}>{commentErrors.content}</p>}
                         <button type="submit" className="comment-button">등록</button>
                     </form>
                     {/* 댓글 입력 폼 끝! */}
