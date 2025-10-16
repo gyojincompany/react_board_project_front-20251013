@@ -130,8 +130,19 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
     };
 
     //댓글 삭제 이벤트 함수
-    const handleCommentDelete = (commentId) => {
-        
+    const handleCommentDelete = async (commentId) => {
+        if(!window.confirm("정말 삭제하시겠습니까?")) { //확인->true, 취소->false
+            return;
+        }
+        try {
+            await api.delete(`/api/comments/${commentId}`);
+            alert("댓글 삭제 성공!");
+            //navigate("/board");
+            loadComments(); //갱신된 댓글 리스트를 다시 로딩
+        } catch (err) {
+            console.error(err);
+            alert("댓글 삭제 권한이 없거나 삭제할 수 없는 댓글입니다.");
+        }
     }
 
     //댓글 수정 이벤트 함수->백엔드 수정 요청
