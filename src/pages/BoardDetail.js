@@ -106,8 +106,9 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
             return;
         }
         try {
+            alert("댓글을 입력하시겠습니까?");
             await api.post(`/api/comments/${id}`, { content : newComment });
-            setNewComment("");
+            setNewComment("");            
             //댓글 리스트 불러오기 호출
             loadComments(); //새 댓글 기존 댓글 리스트에 반영
         } catch (err) {            
@@ -243,16 +244,18 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                                     <textarea value={editingCommentContent} 
                                     onChange={(e) => setEditingCommentContent(e.target.value)}
                                     />
-                                    <button className="comment-save"
-                                        onClick={() => handleCommentUpdate(c.id)}
-                                    >
-                                        저장
-                                    </button>
-                                    <button className="comment-cancel"
-                                        onClick={() => setEditingCommentId(null)}
-                                    >
-                                        취소
-                                    </button>
+                                    <div className="comment-savegroup">
+                                        <button className="comment-save"
+                                            onClick={() => handleCommentUpdate(c.id)}
+                                        >
+                                            저장
+                                        </button>
+                                        <button className="comment-cancel"
+                                            onClick={() => setEditingCommentId(null)}
+                                        >
+                                            취소
+                                        </button>
+                                    </div>
                                 </>
                                 /* 댓글 수정 섹션 끝! */
                             ) : (
@@ -267,11 +270,11 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                                         {/* 로그인한 유저 본인이 쓴 댓글만 삭제 수정 가능 */}
                                         {user === c.author?.username && (
                                         <>    
-                                            <button className="edit-button" 
+                                            <button className="comment-edit" 
                                                 onClick={() => handleCommentEdit(c)}>
                                                 수정
                                             </button>
-                                            <button className="delete-button"
+                                            <button className="comment-delete"
                                                 onClick={() => handleCommentDelete(c.id)}>
                                                 삭제
                                             </button>
