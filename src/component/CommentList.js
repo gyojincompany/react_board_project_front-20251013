@@ -44,7 +44,8 @@ function CommentList({ comments, user, loadComments }) {
 
   //날짜 format 함수 -> 날짜와 시간 출력
   const commentFormatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
+    console.log("댓글입력날짜형식:" + dateString);
+    return new Date(dateString).toLocaleString();
   };
 
   return (
