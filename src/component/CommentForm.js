@@ -11,6 +11,7 @@ function CommentForm({ user, boardId, loadComments }) {
     setCommentErrors({});
     if (!user) {
       alert("로그인 한 후 댓글을 작성해 주세요.");
+      return;
     }
     if (!newComment.trim()) {
       alert("댓글 내용을 입력해주세요.");

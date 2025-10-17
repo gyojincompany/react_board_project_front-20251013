@@ -42,7 +42,7 @@ function PostView({ post, user, setEditing }) {
             <button className="edit-button" onClick={() => setEditing(true)}>
               수정
             </button>
-            <button className="delete-button" onClick={() => handleDelete}>
+            <button className="delete-button" onClick={handleDelete}>
               삭제
             </button>
           </>
