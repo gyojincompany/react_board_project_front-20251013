@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../api/axiosConfig";
 
 function PostEdit({ post, setEditing, setPost }) {
+  //props post->BoardDetail에서 제공한 기존 글(수정하기 전 글)->아이디,제목,내용
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
 

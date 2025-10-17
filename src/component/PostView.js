@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import api from "../api/axiosConfig";
 
 function PostView({ post, user, setEditing }) {
+  //props->post->상세보기 화면에서 보여줄 글 객체
   const isAuthor = user && user === post.author.username;
   const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ function PostView({ post, user, setEditing }) {
             <button className="edit-button" onClick={() => setEditing(true)}>
               수정
             </button>
-            <button className="delete-button" onClick={handleDelete}>
+            <button className="delete-button" onClick={() => handleDelete}>
               삭제
             </button>
           </>
